@@ -1,16 +1,23 @@
 import express from 'express'
-import { ProductManager } from '../controllers/product-manager-db.js'
 import { CartsManager } from '../controllers/carts-manager-db.js'
-
+import { CartsController } from '../controllers/carts-controller.js'
 
 //Creo mi instancia de objeto Router
 export const router = express.Router()
 //Creo instancia de mi cart Manager.
 const cartsManager = new CartsManager()
 
-const productManager = new ProductManager()
+const cartsController = new CartsController()
+
+router.get('/api2/carts/:cid', cartsController.getCartById)
+router.post('/api2/carts',cartsController.createCart)
+router.post('/api/carts/:cid/products/:pid',cartsController.addProductInCart)
+router.delete('/api/carts/:cid/products/:pid',cartsController.deleteProductInCart)
+router.delete('/api/carts/:cid',cartsController.clearCart)
+router.put('/api/carts/:cid',cartsController.addProductListInCart)
 
 
+/*
 router.get('/api/carts/:cid',async (req,res)=>{
     //Esta ruta devuelve un carrito
     const {cid} = req.params
@@ -28,10 +35,14 @@ router.get('/api/carts/:cid',async (req,res)=>{
         res.status(500).json({error: 'Error del servidor'})
     }
 })
+*/
 
+
+/*
 router.post('/api/carts',async (req,res)=>{
     //Esta ruta simplemente crea un carrito y lo envia al cliente para ser mostrado.
     try{
+        console.log('Entrandooooosffsf')
         const newCart = await cartsManager.createCart()
         res.json(newCart)
         }
@@ -42,15 +53,16 @@ router.post('/api/carts',async (req,res)=>{
 
   
 })
+*/
 
-
+/*
 router.post('/api/carts/:cid/products/:pid',async(req,res)=>{
     //Agregar el producto pasado por paremtro (su id) al carrito pasado por su parametro id.
     //De estar el producto incrementa la cantidad de uno, de no estar lo crea y agrega una unidad del mismo.
     const {cid:cartId,pid:productId} = req.params
     const {quantity} = req.body
-     //console.log('FFFF: ',cartId,productId) 
-     //console.log('Quantity: ',req.body,quantity) 
+     console.log('FFFF: ',cartId,productId) 
+     console.log('Quantity: ',req.body,quantity) 
     try{
         const response = await cartsManager.addProductInCart(cartId,productId,Number(quantity))
         if (response.success){
@@ -72,7 +84,8 @@ router.post('/api/carts/:cid/products/:pid',async(req,res)=>{
     }
     
 })
-
+*/
+/*
 router.delete('/api/carts/:cid/products/:pid', async(req,res)=>{
     const {cid,pid} = req.params // Obtengo los parametros.
     
@@ -92,7 +105,8 @@ router.delete('/api/carts/:cid/products/:pid', async(req,res)=>{
         res.status(500).json({error: 'Error del servidor'})
     }
 })
-
+*/
+/*
 router.put('/api/carts/:cid', async(req,res)=>{
     //Este endpoint toma por body un array de productos y cantidades y los agrega al carrito cid
     //Va a recorrer el array que reccibe por body y usando la funcion addProductInCart agregue esos productos.
@@ -114,8 +128,9 @@ router.put('/api/carts/:cid', async(req,res)=>{
         res.status(500).json({error: 'Error del servidor'})
     }
 })
+*/
 
-
+/*
 router.put('/api/carts/:cid/products/:pid', async(req,res)=>{
     const {cid:cartId,pid:productId} = req.params // Obtengo los parametros.
     const {quantity} = req.body
@@ -135,7 +150,8 @@ router.put('/api/carts/:cid/products/:pid', async(req,res)=>{
         res.status(500).json({error: 'Error del servidor'})
     }
 })
-
+*/
+/*
 router.delete('/api/carts/:cid', async(req,res)=>{
 
     const {cid:cartId} = req.params // Obtengo los parametros.
@@ -156,6 +172,7 @@ router.delete('/api/carts/:cid', async(req,res)=>{
         res.status(500).json({error: 'Error del servidor'})
     }
 })
+*/
 
 router.get('/carts/:cid',async(req,res)=>{
     const {cid:cartId} = req.params

@@ -4,13 +4,17 @@ import { uploadProductImage } from '../config/multer-configs.js'
 //Creo la instancia de router.
 export const router = express.Router()
 const productManager = new ProductManager()
+import { ViewsController } from '../controllers/views-controllers.js'
 
+const viewsController = new ViewsController()
 
-router.get('/',(req,res)=>{
+router.get('/',viewsController.viewHome)
+router.get('/viewproducts', viewsController.viewProductsList)
+router.get('/viewproduct/:pid', viewsController.viewProduct)
+router.get('/realtimeproducts', viewsController.viewRealTimeProducts)
+router.get('/chat',viewsController.viewChat)
 
-    res.render('home')
-})
-
+/*
 router.get('/viewproducts', async (req,res)=>{
     try{
         const products = await productManager.getProducts()
@@ -35,7 +39,9 @@ router.get('/viewproducts', async (req,res)=>{
         res.status(500).render('error', { errorMessage: 'Error interno del servidor' });
     }
 })
+*/
 
+/*
 router.get('/product/:pid',async(req,res)=>{
     //Recibo por parametro el id del producto y lo uso para pedir al manager los datos de dicho producto..
     const {pid} = req.params
@@ -60,9 +66,11 @@ router.get('/product/:pid',async(req,res)=>{
         
     }
 })
+*/
  
 
 //En esta funcion no hay problema con el mapeo de handlebars xq trabaja por dom
+/*
 router.get('/realtimeproducts',(req,res)=>{
     res.render("realTimeProducts")
 })
@@ -70,10 +78,10 @@ router.get('/realtimeproducts',(req,res)=>{
 
 router.get('/chat',async (req,res)=>{
      res.render('chat/chat')
-})
+})*/
 
-
-
+/*
+ESTO LO HARA EL FRONT
 router.post('/upload', uploadProductImage.single('file'), (req, res) => {
     
     console.log('Llego a post: ', req.file, req.body, req.file.filename)
@@ -85,3 +93,4 @@ router.post('/upload', uploadProductImage.single('file'), (req, res) => {
   
   
 
+*/

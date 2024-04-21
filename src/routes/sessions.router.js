@@ -1,13 +1,23 @@
 import express from 'express'
 import { CartsManager } from '../controllers/carts-manager-db.js'
 import { UserModel } from '../models/user.models.js'
+import { UsersController } from '../controllers/users-controller.js'
 import passport from 'passport'
 import { createHash, isValidPassword } from '../utils/hashbcryp.js'
 import jwt from 'jsonwebtoken'
 
 export const router = express.Router()
 const cartsManager = new CartsManager()
+const usersController = new UsersController
 
+
+router.post('/api/sessions/registrarse',usersController.createUser)
+router.post('/api/sessions/login',usersController.authenticateUser)
+router.post("/logout", usersController.clearTokenSession)
+
+
+
+//front
 router.get('/api/sessions/registrarse',async(req,res)=>{
     res.render('register')
 })
@@ -16,7 +26,7 @@ router.get('/api/sessions/login',(req,res)=>{
     res.render('login')
 })
 
-
+/*
 router.post('/api/sessions/registrarse',async(req,res)=>{
     const {first_name, last_name, email, password,age, role} = req.body;
     console.log(req.body)
@@ -38,8 +48,9 @@ router.post('/api/sessions/registrarse',async(req,res)=>{
         res.status(500).send('Error del servidor...')
     }
 })
+*/
 
-
+/*
 router.post('/api/sessions/login',async(req,res)=>{
    //Voy a corroborar que los datos ingresados pertenescan a un user logueado
    const {email,password} = req.body
@@ -66,20 +77,20 @@ router.post('/api/sessions/login',async(req,res)=>{
 
 
 })
-
-
+*/
+/*
 router.post("/logout", (req, res) => {
     res.clearCookie("sessiontoken");
     res.redirect("/api/sessions/login");
     //Limpiamos la cookie y lo mandamos al login. 
 })
-
+*/
 //----------------------------------------------------------------------------------------------------------------
 
 
 
 router.get("/github", passport.authenticate("github", {scope: ["user:email"]}) ,async (req, res)=> {
-    console.log('ghfdgfgfdrfffffffffffffffffffffffff')
+    console.log('Se ingreso con github')
 })
 
 
@@ -94,16 +105,17 @@ router.get("/githubcallback", passport.authenticate("github", {failureRedirect: 
     req.session.admin = req.user.role == 'admin' ? true : false //Para saber si se trata de un admin
 
     */
-    res.redirect('/products')
+    //res.redirect('/products')
+    res.send('github callk')
 
 })
 
 
 
-
+/*
 router.get('/api/sessions/logout',(req,res)=>{
     res.clearCookie("sessiontoken");
     res.redirect("/api/sessions/login");
 })
 
-
+*/

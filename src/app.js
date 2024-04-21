@@ -11,7 +11,6 @@ import { initializePassport } from "./config/passport.config.js";
 
 // Importacion de rutas.
 import {router as routerViews} from './routes/views.router.js'
-import {router as routerTest} from './routes/testspages.router.js'
 import {router as routerCarts } from './routes/carts.router.js'
 import {router as routerProducts} from './routes/products.router.js'
 import {router as routerSessions} from './routes/sessions.router.js'
@@ -45,13 +44,12 @@ configHandlebars(app)
 //importante este middleware este aca xq tiene variables de session
 //app.use(addSessionData)
 
-app.use(passport.initialize());
+//app.use(passport.initialize());
 initializePassport();
-app.use(addSessionData)
+//app.use(addSessionData)
 
 //Routes : le decimos a la app de express que debe usar las rutas de los router
 app.use('/',routerViews)
-app.use('/',routerTest)
 app.use('/',routerCarts) 
 app.use('/',routerProducts)
 app.use('/',routerSessions)

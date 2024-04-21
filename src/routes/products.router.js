@@ -1,18 +1,27 @@
 import express from 'express'
 import { ProductManager } from '../controllers/product-manager-db.js'
+import { ProductController } from '../controllers/products-controller.js'
 
 //Creo mi router.
 export const router = express.Router()
 //Creo la instancia.
 const productManager = new ProductManager()
+const productController = new ProductController()
 
 
+router.get('/api/products',productController.getProducts)
+router.get('/api/products/:pid',productController.getProductById)
+router.post('/api/products',productController.addProduct)
+router.put('/api/products/:pid',productController.updateProduct)
+router.delete('/api/products/:pid',productController.deleteProduct)
+
+/*/*
 router.get('/api/products', async (req,res)=>{
     /*Al hacer una peticion a '/products' pido los productos al product Manager.
       Si todo sale Ok miro req.query si trajo limit o no trajo. Si trajo limit devuelvo el numero de objetos que me pide en limit.
       SI no trajo limit devuelvo la lista entera de productos.
       Si ocurrio un error doy aviso y devuelvo en la respuesta un status en forma de json.
-    */  
+    
     try{
         const limit = req.query.limit
         const productos = await productManager.getProducts()
@@ -25,13 +34,14 @@ router.get('/api/products', async (req,res)=>{
         res.status(500).json({error: 'Error del servidor'})
     }
 })
+*/
 
-
+/*
 router.get('/api/products/:pid', async (req,res)=>{
     /*Al hacer una peticion a '/products/:pid' pido los productos al product Manager con el metodo getProductByID y uso de parametro lo que vino en param.
      SI no vino un producto devuelvo un objeto JSON con mensaje de error, si existe el producto lo devuelvo tambien en forma de objeto json.
      Si ocurrio un error doy aviso y devuelvo en la respuesta un status en forma de json.
-  */
+  
   try{
       const id = req.params.pid
       const producto = await productManager.getProductById(id)
@@ -45,13 +55,13 @@ router.get('/api/products/:pid', async (req,res)=>{
       res.status(500).json({error: 'Error del servidor'})
   }
 })
+*/
 
-
+/*
 router.post('/api/products', async (req,res)=>{
- 
-    try{
         const productToAdd =req.body
         console.log('prrr: ', productToAdd)
+    try{
         await productManager.addProduct(productToAdd)
         res.json('Producto agregado con exito !')
 
@@ -60,7 +70,8 @@ router.post('/api/products', async (req,res)=>{
         res.status(500).json({error: 'Error del servidor'})
     }
 })
-
+*/
+/*
 router.delete('/api/products/:pid', async(req,res)=>{
  
     try{
@@ -73,8 +84,9 @@ router.delete('/api/products/:pid', async(req,res)=>{
         res.status(500).json({error: 'Error del servidor'})
     }
 })
+*/
 
-
+/*
 router.put('/api/products/:pid', async(req, res)=>{
     try{
         const {pid:productIdToUpdate} = req.params
@@ -87,7 +99,7 @@ router.put('/api/products/:pid', async(req, res)=>{
         res.status(500).json({error: 'Error del servidor'})
     }
 })
-
+*/
 
 
 router.get('/pruebas',async(req,res)=>{
