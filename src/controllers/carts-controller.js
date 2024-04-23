@@ -89,4 +89,15 @@ export class CartsController{
         }
     }
 
+    async cartCheckout(req,res){
+        const {cid:cartId} = req.params
+        try{
+            //Voy a buscar el carrito con el servicio de carritos
+            const cart = cartRepository.getCartById(cartId)
+            console.log('Productos en el carro: ',cart)
+        }catch(error){
+            throw new Error('Error al intentar checkout...')
+        }
+    }
+
 }

@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import passport from 'passport'
 
+import cors from 'cors'
 import { configHandlebars } from "./config/handlebars-config.js"
 import { initSocket } from "./socket-config.js"
 import { initDataBaseConnection } from "./config/database.js";
@@ -17,6 +18,12 @@ import {router as routerSessions} from './routes/sessions.router.js'
 
 import { addSessionData } from "./middlewares/middlewares.js";
 
+//PRUEBA SQLITE3
+//import { connectToSqlite3 } from "./config/sqliteconnect.js";
+//import { SQLProductsDAO } from "./dao/sqlite.products.dao.js";
+//const unaInstancia = new SQLProductsDAO()
+//console.log(unaInstancia.getProducts())
+
 //crecion de instancia de express.
 const PUERTO = 8080
 export const app = express()
@@ -30,6 +37,8 @@ app.use(express.static('./src/public'));
 app.use(express.json())
 
 app.use(express.urlencoded({extended:true}))
+app.use(cors());
+
 // Configurar el middleware de análisis del cuerpo para procesar datos de formularios
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser('firmasecreta'))
@@ -38,11 +47,12 @@ app.use(cookieParser('firmasecreta'))
 
 //Configuraciones:
 //Pongo a funcionar la conexion a la BD.
+//connectToSqlite3()
 initDataBaseConnection()
 configHandlebars(app)
 //configSessionMongo(app) //Fuera de servicio por dejar de usar session
 //importante este middleware este aca xq tiene variables de session
-//app.use(addSessionData)
+app.use(addSessionData)
 
 //app.use(passport.initialize());
 initializePassport();

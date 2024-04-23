@@ -1,6 +1,7 @@
 
 import { generarValorAleatorio,generarCodigo } from './codigosprod.js';
 import fs from 'fs'
+import sqlite3 from 'sqlite3'
 
 const moto_Products = [
   {
@@ -13199,4 +13200,70 @@ const nuevosDatos = moto_Products.map(item => ({
   thumbnails: [item.imageSrc,item.imageSrc,item.imageSrc,item.imageSrc]
 }))
 
-fs.promises.writeFile('miarchivo.json',JSON.stringify(nuevosDatos,null,1))
+//fs.promises.writeFile('miarchivo.json',JSON.stringify(nuevosDatos,null,1))
+
+//Con esta funcion vamos a poblar la BD sqlite3 con nuevos datos.
+
+const dbPath = 'mi_basedatos3.db';
+// Crea una instancia de la base de datos
+const db = new sqlite3.Database(dbPath);
+
+const myQuery1 = `CREATE TABLE IF NOT EXISTS productos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT,
+  description TEXT,
+  price TEXT,
+  img TEXT,
+  code TEXT UNIQUE,
+  category TEXT,
+  stock INTEGER,
+  status BOOLEAN
+)`
+
+const myQuery2 = `CREATE TABLE IF NOT EXISTS thumbnails (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  product_id INTEGER,
+  url TEXT,
+  FOREIGN KEY (product_id) REFERENCES productos(id)
+)`
+
+    
+//db.run(myQuery1)
+//db.run(myQuery2)
+
+//recorro datos y voy a poblar la base de datos
+const queryInsert = `
+    INSERT INTO productos (title, description, price, img, code, category, stock, status) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+`
+
+const queryInsertThumbnails = `
+    INSERT INTO productos (product_id,url) 
+    VALUES (?, ?)
+`
+/*
+nuevosDatos.forEach(item =>{
+  //Por cada item hago una insersion
+  db.run(queryInsert,
+        [item.title, item.description, item.price, item.img, item.code, item.category, item.stock, item.status],
+        
+      )
+       
+})
+*/
+
+//Ahora para crear la tabla thubnails le pongo 4 registros por producto y en su foreign el id
+db.all(`SELECT * FROM productos`,[],(err,rows)=>{
+  //rows es un array
+  rows.forEach(item => {
+    console.log(item)
+  //Por cada item inserto 4 registros
+  //o sea hago db.run 4 veces
+  db.run(queryInsertThumbnails,[item.id,item.img])
+  db.run(queryInsertThumbnails,[item.id,item.img])
+  db.run(queryInsertThumbnails,[item.id,item.img])
+  db.run(queryInsertThumbnails,[item.id,item.img])
+
+  })
+})
+

@@ -16,6 +16,9 @@ router.delete('/api/carts/:cid/products/:pid',cartsController.deleteProductInCar
 router.delete('/api/carts/:cid',cartsController.clearCart)
 router.put('/api/carts/:cid',cartsController.addProductListInCart)
 
+//purchaseRoutes.
+router.post('/:cid/purchase', cartsController.cartCheckout)
+
 
 /*
 router.get('/api/carts/:cid',async (req,res)=>{

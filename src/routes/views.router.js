@@ -1,18 +1,21 @@
 import express from 'express'
 import { ProductManager } from '../controllers/product-manager-db.js'
-import { uploadProductImage } from '../config/multer-configs.js'
+
 //Creo la instancia de router.
 export const router = express.Router()
-const productManager = new ProductManager()
 import { ViewsController } from '../controllers/views-controllers.js'
 
 const viewsController = new ViewsController()
 
 router.get('/',viewsController.viewHome)
-router.get('/viewproducts', viewsController.viewProductsList)
-router.get('/viewproduct/:pid', viewsController.viewProduct)
+router.get('/views/products', viewsController.viewProductsList)
+router.get('/views/product/:pid', viewsController.viewProduct)
 router.get('/realtimeproducts', viewsController.viewRealTimeProducts)
 router.get('/chat',viewsController.viewChat)
+router.get('/views/registrarse', viewsController.viewLoginGet)
+router.get('/views/login', viewsController.viewLoginGet)
+router.post('/views/login', viewsController.viewLoginPost)
+router.get('/views/logout', viewsController.viewLogout)
 
 /*
 router.get('/viewproducts', async (req,res)=>{

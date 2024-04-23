@@ -144,21 +144,21 @@ export class CartRepository {
 
     }
 
-    async countProductsIncart(cartId){
+    async countProductsInCart(cartId){
         try {
                //Busco el carrito y de acuerdo a exista o no el producto en el tomo un comportamiento u otro.
                const searchedCart = await CartModel.findById(cartId)
                //Si no exist el carrito salgo devolviendo null
                 if(!searchedCart) {
                     console.log(`No existe carrito id${cartId}`)
-                    return null
+                    return 0
                 }
                 let productsQuantity = 0
                 searchedCart.cart.products.forEach( item => productsQuantity = productsQuantity + item.quantity)
                 return productsQuantity
 
         } catch (error) {
-            throw new Error(`Error al hacer el conteo de productos en el carrito id${cartId}`)
+            throw new Error(`Error al intentar conteo de productos en el carrito id${cartId}`)
         }
     }
 }

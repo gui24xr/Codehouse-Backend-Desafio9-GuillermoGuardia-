@@ -1,10 +1,8 @@
 import express from 'express'
 import { CartsManager } from '../controllers/carts-manager-db.js'
-import { UserModel } from '../models/user.models.js'
 import { UsersController } from '../controllers/users-controller.js'
 import passport from 'passport'
-import { createHash, isValidPassword } from '../utils/hashbcryp.js'
-import jwt from 'jsonwebtoken'
+
 
 export const router = express.Router()
 const cartsManager = new CartsManager()
@@ -13,7 +11,8 @@ const usersController = new UsersController
 
 router.post('/api/sessions/registrarse',usersController.createUser)
 router.post('/api/sessions/login',usersController.authenticateUser)
-router.post("/logout", usersController.clearTokenSession)
+router.post('/api/sessions/logout', usersController.clearTokenSession)
+
 
 
 

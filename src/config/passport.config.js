@@ -11,13 +11,13 @@ const JWTStrategy = jwt.Strategy;
 const ExtractJwt = jwt.ExtractJwt;
 
 export const initializePassport = () => {
+    //Lee el JWT
     passport.use("jwt", new JWTStrategy({
         jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
         secretOrKey: "coderhouse"
         //Misma palabra que tenemos en la App.js! No se olviden! 
     }, async (jwt_payload, done) => {
         try {
-            //console.log('ghghghggghg', jwt_payload)
             return done(null, jwt_payload);
         } catch (error) {
             return done(error);

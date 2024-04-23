@@ -29,7 +29,8 @@ export class UsersController{
     }
 
     async authenticateUser(req,res){
-        const {email,password} = req.body //console.log(req.body) 
+        const {email,password} = req.body 
+        console.log(req.body) 
         try {
             const authenticateResult = await usersRepository.authenticateUser(email,password)
             if (authenticateResult.isSuccess){
@@ -37,9 +38,8 @@ export class UsersController{
                 //const token = jwt.sign({user: {...authenticateResult.user}},'coderhouse',{expiresIn:"1h"})
                 res.cookie("sessiontoken", generateJWT(authenticateResult.user), {maxAge: 3600000,  httpOnly: true  })
                //res.redirect('/products') //Envio a la raiz y va a aparecer logueado y la barra de sesion con su info gracias a la lectura del token y el middleware
-                console.log('Holaadadaddfaf')
                 res.json(authenticateResult)
-            }
+             }
             else{
                 res.json(authenticateResult)
             }
@@ -50,9 +50,13 @@ export class UsersController{
     }
 
     async clearTokenSession(req,res){
-        //Invalida el token existente.
-        res.clearCookie("sessiontoken");
+      
+        //Redirecciona home
+        res.redirect('/')
+
     }
+
+    
 
     
 }

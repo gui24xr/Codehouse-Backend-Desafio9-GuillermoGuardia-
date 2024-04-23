@@ -17,6 +17,8 @@ function initDataBaseConnection(){
     .then(console.log('Conexion con BD OK !'))
     .catch((error)=>console.log(error))
 
+    //POr ahora queda asi pero mas adelante segun el sistema que se utilice vamos a conectar a otra bd
+
 }
 
 export {initDataBaseConnection}
