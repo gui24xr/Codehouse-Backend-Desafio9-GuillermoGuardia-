@@ -70,4 +70,18 @@ export class ProductController{
             res.status(500).send(`Error al intentar agregar producto...`)
         }
     }
+
+       
+async getProductsListPaginate(req,res){
+    const {limit,page,sort,query} = req.query     
+    try{
+         const sortValue = sort == '1' ? 1 : sort == '-1' ? -1 : 0   //console.log('SortValue', sortValue)
+        const paginate = await productRepository.getProductsPaginate(limit ? limit : 10,page ? page : 1,sortValue,query)
+        res.json(paginate)
+
+    }catch(error){
+         res.status(500).json({error: 'Error del servidor'})
+        throw new Error('Error al intentar obtener productos con paginacion...')
+    }
+}
 }

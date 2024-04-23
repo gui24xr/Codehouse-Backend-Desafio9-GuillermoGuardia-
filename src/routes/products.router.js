@@ -9,11 +9,13 @@ const productManager = new ProductManager()
 const productController = new ProductController()
 
 
-router.get('/api/products',productController.getProducts)
-router.get('/api/products/:pid',productController.getProductById)
+router.get('/api/products',productController.getProductsListPaginate)//Deveulve paginado
+router.get('/api/products/:pid',productController.getProductById)//Devuelve listado entero
 router.post('/api/products',productController.addProduct)
 router.put('/api/products/:pid',productController.updateProduct)
 router.delete('/api/products/:pid',productController.deleteProduct)
+
+
 
 /*/*
 router.get('/api/products', async (req,res)=>{

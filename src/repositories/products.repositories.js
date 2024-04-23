@@ -45,7 +45,7 @@ export class ProductRepository{
 
    async getProductsPaginate(limit,page,sort,query){
     try {
-        const products = await mongoProductsDAO(limit,page,sort,query)
+        const products = await mongoProductsDAO.getProductsPaginate(limit,page,sort,query)
         return products
     } catch (error) {
       console.log('Error al recuperar los productos...')
