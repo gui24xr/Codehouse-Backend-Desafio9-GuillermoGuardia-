@@ -226,6 +226,13 @@ async viewProductsListPaginate(req,res){
         res.render('chat/chat')
    }
 
+   async viewProfile(req,res){
+    /*Esta vista envia a los datos de perfil del usuario renderizando la plantilla profile.
+    en este caso dado que tengo el middleware que agrega los datos del token al objeto res 
+    uso el objeto res en la plantilla, asique simplemente la mando a renderizar */
+    res.render('profile')
+   }
+
    
 
 

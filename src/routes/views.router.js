@@ -18,6 +18,7 @@ router.post('/views/registrarse', viewsController.viewRegisterPost)
 router.get('/views/login', viewsController.viewLoginGet)
 router.post('/views/login', viewsController.viewLoginPost)
 router.get('/views/logout', viewsController.viewLogout)
+router.get('/views/profile', viewsController.viewProfile)
 
 /*
 router.get('/viewproducts', async (req,res)=>{

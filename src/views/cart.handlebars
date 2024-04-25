@@ -4,7 +4,7 @@
 <div>
      <!--BANNER SUPERIOR -->
     <div class="w-full flex items-center pl-10 bg-blue-600 text-white object-fill py-4">
-      <p class="text-2xl leading-none">/</p>
+      <p class="text-2xl leading-none">/carrito de compras</p>
     </div>
 
     <!--TITULO -->
@@ -20,9 +20,11 @@
 
         <thead class="text-xs text-white uppercase bg-blue-600 border-b border-blue-400 dark:text-white">
             <tr>
+                <!--
                 <th scope="col" class="px-4 py-1 bg-blue-500">
                     Id
                 </th>
+                -->
                 <th scope="col" class="px-4 py-1 bg-blue-500">
                     Titulo
                 </th>
@@ -43,9 +45,11 @@
         <tbody>
             {{#each productsList}}
             <tr class="bg-white text-blue-500">
+                <!--
                 <th class="px-4 py-1">
                     {{this.id}}
                 </th>
+                -->
                 <td class="px-4 py-1">
                     {{this.title}}
                 </td>
@@ -88,9 +92,7 @@
             </tr>
         </tbody>
     </table>
-    <div class="flex items-end justify-end mt-10 font-semibold text-gray-900 dark:text-white">
-        <p>TOTAL PRECIO CARRITO: ${{cartAmount}}</p>
-    </div>
+   
 </div>
 
 
