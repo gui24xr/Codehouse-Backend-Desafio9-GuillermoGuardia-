@@ -9,8 +9,8 @@ const cartsManager = new CartsManager()
 
 const cartsController = new CartsController()
 
-router.get('/api2/carts/:cid', cartsController.getCartById)
-router.post('/api2/carts',cartsController.createCart)
+router.get('/api/carts/:cid', cartsController.getCartById)
+router.post('/api/carts',cartsController.createCart)
 router.post('/api/carts/:cid/products/:pid',cartsController.addProductInCart)
 router.delete('/api/carts/:cid/products/:pid',cartsController.deleteProductInCart)
 router.delete('/api/carts/:cid',cartsController.clearCart)

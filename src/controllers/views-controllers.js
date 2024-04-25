@@ -8,8 +8,10 @@ const usersRepository = new UsersRepository()
 export class ViewsController{
 
     async viewHome(req,res){
-        //Teniendo en cuenta que en res.locals.sessionData tenemos datos de si hay token activo y sus dato
-        console.log('ssfs: ',res.locals.sessionData)
+        //Teniendo en cuenta que en res.locals.sessionData tenemos datos de si hay token activo 
+        //SI al entrar a home encontramos que hay user logueado lo redirijo a la vista viewproductspaginate
+        //Si no hay user con token.
+        //console.log('ssfs: ',res.locals.sessionData)
 
         if (res.locals.sessionData.login){
             res.redirect('/views/productslistpaginate')
@@ -42,6 +44,7 @@ export class ViewsController{
     }
 
     async viewProductsList(req,res){
+        console.log(res)
         try{
             const productsList = await productsRepository.getProducts()
             const mappedProducts = productsList.map(item => ({
@@ -56,6 +59,8 @@ export class ViewsController{
                 status: item.status,
                 thumbnails: item.thumbnails
             }))
+
+            //Ademas de enviar los productos mapeados para handlebar envio la informacion de sesion para utilizar en el script
             res.render('products',{productsList:mappedProducts})
 
         }catch(error){
@@ -67,6 +72,7 @@ export class ViewsController{
 async viewProductsListPaginate(req,res){
     const {limit,page,sort,query} = req.query     
     //console.log('Parametros que llegaron', limit,page,sort,query)
+    //console.log('Variables de sesion: ',res.locals.sessionData)
     try{
         //Sort el formulario solo permitira que solo llegue -1,1 o 0
         //Por ahora dejo query para que entre por params
@@ -98,7 +104,9 @@ async viewProductsListPaginate(req,res){
         actualPage: paginate.page,
         totalPages: paginate.totalPages,
         limit: paginate.limit,
-        valuesToScript: JSON.stringify(paginate),
+        paginateValuesToScript: JSON.stringify(paginate),
+        //En esta propiedad viaja la ifnromacion del user logueado.
+        loggedUserInfo:JSON.stringify(res.locals.sessionData)
        }
 
        res.render('productspaginate',valuesToRender)
@@ -172,9 +180,7 @@ async viewProductsListPaginate(req,res){
               
              }
             else{
-                //Si no salio Ok el autenticado manda a pagina de errror
-              //res.render('errorpage')
-              console.log('etet')
+                res.render('messagepage',{message:`El usuario ${email} no se encuentra registrado en nuestra tienda....`})
             }
         } catch (error) {
             throw new Error('Error al intentar logear usuario...')

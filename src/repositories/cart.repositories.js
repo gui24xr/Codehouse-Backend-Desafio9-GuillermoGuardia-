@@ -13,6 +13,18 @@ export class CartRepository {
     }
 
  
+    //Devuelve un objeto con cantidad de objetos en el carro
+    //Este metodo es interno de la clase para tener informacion a mano...
+    countProducts(cart){
+        //Calcula la cantidad de productos en el carro.
+        let productsQuantity = 0
+        cart.products.forEach( item => productsQuantity = productsQuantity + item.quantity)
+        return productsQuantity
+        
+    }
+
+
+
     async getCartById(cartId){
         try {
             const searchedCart = await CartModel.findById(cartId)
@@ -20,7 +32,9 @@ export class CartRepository {
                 console.log(`No existe carrito id${cartId}`)
                 return null
             }
-            return searchedCart     
+            return {...searchedCart,
+                    countProducts:this.countProducts(searchedCart)
+                }     
         } catch (error) {
             throw new Error('Error al obtener carrito por ID...')
         }
@@ -59,9 +73,14 @@ export class CartRepository {
                 //Si me pasaron cantidad por parametro pongo esa cantidad, si no, solo agrego uno.
                 !quantity ? searchedCart.products[position].quantity +=1 :  searchedCart.products[position].quantity += quantity
             }
+            //Recuento la cantidad de productos en el carrito xq la devolvere como informcion adicional 
             searchedCart.markModified("carts")
             await searchedCart.save()
-            return searchedCart //fijarse si obtener nuevamente antes de devolver.
+            const quantityProducstInCart = await this.countProductsInCart(cartId)
+            //Devuelvo el cart y com info adicional la cantidad de productos
+            return {...searchedCart,
+                    countProducts:this.countProducts(searchedCart)
+                    }     
 
         } catch (error) {
             throw new Error('Error al agregar producto al carrito...')
@@ -82,11 +101,20 @@ export class CartRepository {
                 searchedCart.products.splice(position,1)
                 searchedCart.markModified("carts")
                 await searchedCart.save()
-                return {isSuccess:true,message: 'Producto Eliminado correctamente', cart:searchedCart}
-            }
+                return {
+                        isSuccess:true,
+                        message: 'Producto Eliminado correctamente', 
+                        cart:searchedCart,
+                        countProducts:this.countProducts(searchedCart)}    
+                    }
             else{
                console.log(`El producto ${productId} no esta en el carro,no hay nada para eliminar !`)
-               return { isSuccess: false, message: 'El producto no se encontró en el carrito',cart:searchedCart };
+               return { 
+                        isSuccess: false, 
+                        message: 'El producto no se encontró en el carrito',
+                        cart:searchedCart,
+                        countProducts:this.countProducts(searchedCart) 
+                    }
             } 
         } catch (error) {
             throw new Error('Error al eliminar producto del carrito...')
@@ -118,7 +146,12 @@ export class CartRepository {
             //Actualice todo el array ahora guardo,Actualizo en la BD y retorno.
            searchedCart.markModified("carts")
            await searchedCart.save()
-           return {isSuccess:true,message: 'La lista de productos se ingreso en el carrito OK !', cart:searchedCart}
+           return {
+                    isSuccess:true,
+                    message: 'La lista de productos se ingreso en el carrito OK !', 
+                    cart:searchedCart,
+                    countProducts:this.countProducts(searchedCart)
+                }
         } catch (error) {
             throw new Error('Error al agregar producto al carrito...')
         }
@@ -137,7 +170,12 @@ export class CartRepository {
                 searchedCart.products = [] //vacio el array y actualizo BD.
                 searchedCart.markModified("carts") //Actualizo en la BD
                 await searchedCart.save()
-                return {isSuccess:true,message: 'El carrito ah sido vaciado !', cart:searchedCart}
+                return {
+                    isSuccess:true,
+                    message: 'El carrito ah sido vaciado !', 
+                    cart:searchedCart,
+                    countProducts:this.countProducts(searchedCart)
+                }
            } catch (error) {
                 throw new Error('Error al intentar vaciar el carrito...')
            }
@@ -147,14 +185,16 @@ export class CartRepository {
     async countProductsInCart(cartId){
         try {
                //Busco el carrito y de acuerdo a exista o no el producto en el tomo un comportamiento u otro.
+               console.log('Entro el ID: ', cartId)
                const searchedCart = await CartModel.findById(cartId)
                //Si no exist el carrito salgo devolviendo null
                 if(!searchedCart) {
                     console.log(`No existe carrito id${cartId}`)
                     return 0
                 }
+                console.log('que va a pasaaar', searchedCart)
                 let productsQuantity = 0
-                searchedCart.cart.products.forEach( item => productsQuantity = productsQuantity + item.quantity)
+                searchedCart.products.forEach( item => productsQuantity = productsQuantity + item.quantity)
                 return productsQuantity
 
         } catch (error) {

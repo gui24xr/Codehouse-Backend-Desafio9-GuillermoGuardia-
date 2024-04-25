@@ -24,17 +24,19 @@ export async function addSessionData(req, res, next) {
         }
         return next(); 
       }
+      console.log('user desde token:',user)
 
       //console.log('User de jwt: ', user)
       //De este modo sabre a que cart agregar productos con la sesion iniciada , o sea con jwt activo
-
+      //console.log('Carrete: ',await cartsRepository.getCartById(user.user.cart))
       //Si hay user autenticado entonces genero la variable que alimenta la barra de cesion  y lo mando en cada solictud
       res.locals.sessionData  = {
         login: true,
         user: user.user, 
-        admin: user.role == 'admin' ? true : false, //Para saber si se trata de un admin
-        productsQuantityInUserCart : await cartsRepository.countProductsInCart(user.cart)
-      }//console.log('sessionInfo: ', res.locals.sessionData)
+        admin: user.user.role == 'admin' ? true : false, //Para saber si se trata de un admin
+        productsQuantityInUserCart : await cartsRepository.countProductsInCart(user.user.cart),
+      }
+      
         next();
   })(req, res, next)
 }

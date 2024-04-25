@@ -1,0 +1,121 @@
+<!--CONTAINER GRIDS PRODUCTS -->
+            <div class="px-10 py-10 px-5 grid grid-cols-9 gap-4 pb-10">
+                
+                {{#each productsList}}
+                    <div class="flex flex-col justify-between w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                        
+                        <a href="/views/product/{{this.id}}" class="px-3 mb-4">
+                            <img class="p-8 rounded-t-lg" src={{this.img}} alt={{this.title}} />
+                            <p class="text-l font-semibold tracking-tight text-gray-900 dark:text-white">{{this.title}}</p>
+                        </a>
+                        
+
+
+                    <div>
+                        <div class="px-5 mb-4">
+                            <p class="text-sm text-gray-500 truncate dark:text-gray-400">{{this.description}}</p>
+                            <div class="flex col items-center justify-between">
+                                <span class="text-3xl font-bold text-gray-900 dark:text-white">${{this.price}}</span>
+                            </div>
+                        </div>  
+
+                        <!--AGREGADO A CARRITO-->
+                  
+                        <form  class="bg-lime-100 py-8 border border-slate-200 p-3 flex flex-col items-center space-y-2">
+                            
+                            <div  class="flex w-full justify-around">
+                                <label for="counter-input" class="block text-sm font-medium text-gray-900 dark:text-white">Cantidad</label>
+                                <div class="relative flex items-center">
+                                    <button type="button" id="decrement-button-{{this.id}}" onclick="decrementCounterQuantity(`{{this.id}}`)"  class="flex-shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                        <svg class="w-2.5 h-2.5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
+                                        </svg>
+                                    </button>
+                                    <input type="number"  min="1" max="{{this.stock}}" id="counter-input-{{this.id}}" class="flex-shrink-0 text-gray-900 dark:text-white border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center" value="1" required />
+                                    <button type="button" id="increment-button-{{this.id}}" onclick="incrementCounterQuantity(`{{this.id}}`,`{{this.stock}}`)"  class="flex-shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                        <svg class="w-2.5 h-2.5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            
+                            <p class="text-sm text-gray-500 truncate dark:text-gray-400">({{this.stock}} disponibles)</p>
+                            
+
+                            <button id={{this.id}} type="button" onclick="addThisProduct(event)"  class="flex flex-row text-blue-500 hover:text-green-800 ">
+                                <svg class="w-3.5 h-2.5 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                                    <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
+                                </svg>
+                               Agregar
+                            </button>
+
+                            <button id='{comprar${{{this.id}}}' type="button" onclick="showNotificationInfo('error')"  class="text-white bg-red-500 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-s px-5 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Comprar</button>
+                            
+                    </form>
+                    </div>
+
+</div>
+                   
+                {{/each}}
+            </div>
+            
+        
+
+
+
+        
+<script>
+    /*--MANEJO DEL AGREGADO DE PRODUCTOS AL CARRO Y MANIPULACION DEL DOM PARA QUE SE VEA REFLEJADO EN LA VISTA
+        -A travez de handlebars traje la iformacion del usuario logueado en la app.
+        -La plantilla renderiza una card por cada producto. Cada Boton 'agregar a carro' llevara por ID el product ID correspondiente
+    */
+    const loggedUserInfo = {{{loggedUserInfo}}}
+    const actualCart = loggedUserInfo.user.cart //console.log('User Info: ', loggedUserInfo)
+    
+    function addThisProduct(event){
+          //sabemos que el boton tiene el id del producto x lo tanto tenemos el id del producto a agregar
+        const productId = event.target.id
+         //sabemos que el input de cantidad se llama counter input y tiene el ID del producto. Tomamos su valor o sea la cantidad.
+        const selectedQuantity = document.getElementById(`counter-input-${productId}`).value
+        //Tenemos la cantidad seleccionada, el productID y el cart donde agregar, usamos fetch para llevar a cabo la operacacion haciendo solicitud.
+        //Y de acuerdo a lo que envia el server mando una notiicacion de tostify
+        //console.log(productId,selectedQuantity)
+        fetch(`/api/carts/${actualCart}/products/${productId}`,
+            {
+                method:'POST', 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ quantity: Number(selectedQuantity) })
+               })
+                .then(result => result.json())
+                .then(res => {
+                    //showNotification(`Se agregaron ${selectedQuantity} unidades del producto seleccionado a su carrito !`)
+                    console.log(res)
+                   //Manipulando Dom el cambiamos la cantidad de carritos en el navbar
+                    document.getElementById('productsQuantityInUserCart').innerText = res.countProducts
+                })
+        }
+</script>
+
+
+<script>
+    /*-- MANEJO BOTONES +/-----------------------------------------------------------------
+    //teniendo en cuenta estas caracteristicas de los input min="1" max="{{this.stock}}" id="counter-input-{{this.id}}"
+     -Cada input tiene un minimo de 1 y un maximo de cantidad de productos en stock igual que mercado libre.
+     -id="decrement-button-{{this.id}}" onclick="decrementCounterQuantity(`{{this.id}}`)"
+     -id="increment-button-{{this.id}}" onclick="incrementCounterQuantity(`{{this.id}}`)"
+     */
+
+    const decrementCounterQuantity = (id) => {
+       const selectedInput = document.getElementById(`counter-input-${id}`)
+        //Le resto y cambio el valor numerico si es mayor a 2
+        if (selectedInput.value >= 2) selectedInput.value = Number(selectedInput.value) - 1
+    }
+
+    const incrementCounterQuantity = (id,stock) => {
+        const selectedInput = document.getElementById(`counter-input-${id}`)
+        //Le resto y cambio el valor numerico si es mayor a 2
+        if (selectedInput.value < Number(stock)) selectedInput.value = Number(selectedInput.value) + 1
+    }
+</script>

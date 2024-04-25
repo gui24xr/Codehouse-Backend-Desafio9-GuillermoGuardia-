@@ -6,6 +6,7 @@ const collectionName = 'tickets'
 const ticketSchema = mongoose.Schema({
     code: {
         type: String,
+        unique:true,
         required: true
     },
     purchase_datetime: {
@@ -18,16 +19,9 @@ const ticketSchema = mongoose.Schema({
         required: true
     },
     purchaser: {
-        type: String,
-        required: true,
-        index: true,
-        validate: {
-            validator: (value) => {
-              // Utiliza una expresión regular para validar el formato del email
-              return /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(value);
-            },
-            message: props => `${props.value} no es un email válido`
-        }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
     }
 });
 
