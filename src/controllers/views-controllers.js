@@ -1,9 +1,12 @@
 import { ProductRepository } from "../repositories/products.repositories.js"
+import { CartRepository } from "../repositories/cart.repositories.js"
 import { UsersRepository } from "../repositories/users.repositories.js"
 import { generateJWT } from "../utils/jwt.js"
 import { createHash } from "../utils/hashbcryp.js"
+
 const productsRepository = new ProductRepository()
 const usersRepository = new UsersRepository()
+const cartsRepository = new CartRepository()
 
 export class ViewsController{
 
@@ -232,6 +235,43 @@ async viewProductsListPaginate(req,res){
     uso el objeto res en la plantilla, asique simplemente la mando a renderizar */
     res.render('profile')
    }
+
+
+
+   
+async viewCart(req,res){
+    const {cid:cartId} = req.params
+    try{
+       const searchedCart = await cartsRepository.getCartById(cartId)
+       console.log('Cart:', searchedCart )
+      // Mapeo para entregar a hbds
+        const productsList = searchedCart.products.map(item => ({
+            id:item.product._id,
+            img:item.product.img,
+            title:item.product.title,
+            price:item.product.price,
+            quantity:item.quantity,
+            totalAmount: Number(item.quantity) * Number(item.product.price)
+        }))
+        console.log('Produclist: ',productsList)
+  
+    
+        res.render('cart')
+        //res.send('carfsfs')
+        //res.json(searchedCart)
+       
+    
+    }
+
+    catch(error){
+        throw new Error('Error al intentar renderizar vista cart...')
+        
+    }
+    
+}
+ 
+
+    
 
    
 

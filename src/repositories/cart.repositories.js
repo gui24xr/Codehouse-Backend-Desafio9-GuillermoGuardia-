@@ -23,17 +23,26 @@ export class CartRepository {
         
     }
 
+    cartAmount(cart){
+        //Devuelve el total de productos
+        let productsQuantity = 0
+        cart.products.forEach( item => productsQuantity = productsQuantity + item.quantity)
+        return productsQuantity
+        
+    }
+
 
 
     async getCartById(cartId){
         try {
-            const searchedCart = await CartModel.findById(cartId)
+            const searchedCart = await CartModel.findById(cartId).populate('products.product')
             if(!searchedCart) {
                 console.log(`No existe carrito id${cartId}`)
                 return null
             }
-            return {...searchedCart,
-                    countProducts:this.countProducts(searchedCart)
+            return {...searchedCart._doc,
+                    countProducts:this.countProducts(searchedCart),
+                    cartAmount:this.cartAmount(searchedCart)
                 }     
         } catch (error) {
             throw new Error('Error al obtener carrito por ID...')
@@ -78,7 +87,7 @@ export class CartRepository {
             await searchedCart.save()
             const quantityProducstInCart = await this.countProductsInCart(cartId)
             //Devuelvo el cart y com info adicional la cantidad de productos
-            return {...searchedCart,
+            return {...searchedCart._doc,
                     countProducts:this.countProducts(searchedCart)
                     }     
 
@@ -112,7 +121,7 @@ export class CartRepository {
                return { 
                         isSuccess: false, 
                         message: 'El producto no se encontró en el carrito',
-                        cart:searchedCart,
+                        cart:searchedCart._doc,
                         countProducts:this.countProducts(searchedCart) 
                     }
             } 
@@ -149,7 +158,7 @@ export class CartRepository {
            return {
                     isSuccess:true,
                     message: 'La lista de productos se ingreso en el carrito OK !', 
-                    cart:searchedCart,
+                    cart:searchedCart._doc,
                     countProducts:this.countProducts(searchedCart)
                 }
         } catch (error) {
@@ -173,7 +182,7 @@ export class CartRepository {
                 return {
                     isSuccess:true,
                     message: 'El carrito ah sido vaciado !', 
-                    cart:searchedCart,
+                    cart:searchedCart._doc,
                     countProducts:this.countProducts(searchedCart)
                 }
            } catch (error) {
@@ -185,14 +194,14 @@ export class CartRepository {
     async countProductsInCart(cartId){
         try {
                //Busco el carrito y de acuerdo a exista o no el producto en el tomo un comportamiento u otro.
-               console.log('Entro el ID: ', cartId)
+               //console.log('Entro el ID: ', cartId)
                const searchedCart = await CartModel.findById(cartId)
                //Si no exist el carrito salgo devolviendo null
                 if(!searchedCart) {
                     console.log(`No existe carrito id${cartId}`)
                     return 0
                 }
-                console.log('que va a pasaaar', searchedCart)
+                
                 let productsQuantity = 0
                 searchedCart.products.forEach( item => productsQuantity = productsQuantity + item.quantity)
                 return productsQuantity

@@ -18,6 +18,7 @@ import {router as routerSessions} from './routes/sessions.router.js'
 
 import { addSessionData } from "./middlewares/middlewares.js";
 
+
 //PRUEBA SQLITE3
 //import { connectToSqlite3 } from "./config/sqliteconnect.js";
 //import { SQLProductsDAO } from "./dao/sqlite.products.dao.js";
@@ -38,6 +39,7 @@ app.use(express.json())
 
 app.use(express.urlencoded({extended:true}))
 app.use(cors());
+
 
 // Configurar el middleware de análisis del cuerpo para procesar datos de formularios
 app.use(bodyParser.urlencoded({ extended: true }));

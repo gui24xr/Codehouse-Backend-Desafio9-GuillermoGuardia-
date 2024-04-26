@@ -15,6 +15,8 @@ export class ProductRepository{
         }
    }
 
+
+
    async getProductById(productId){
          try {
             const searchedProduct = await mongoProductsDAO.getProductById(productId)
@@ -24,6 +26,15 @@ export class ProductRepository{
         }
 
    }
+
+   async updateProductStock(productId,newStockQuantity){
+     try{
+        await mongoProductsDAO.updateProductStock(productId,newStockQuantity)
+     } catch(error){
+      throw new Error('Error al intentar actualizar  stock producto...')
+     }
+   }
+
 
    async updateProduct(productId,newProduct){
     try {

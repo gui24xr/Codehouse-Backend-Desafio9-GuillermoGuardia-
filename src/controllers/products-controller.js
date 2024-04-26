@@ -19,7 +19,7 @@ export class ProductController{
         const {pid:productId} = req.params
         try{
             const searchedProduct = await productRepository.getProductById(productId)
-            console.log(searchedProduct)
+            //console.log(searchedProduct)
             !searchedProduct
             ? res.send('Producto no encontrado!')
             : res.json(searchedProduct)

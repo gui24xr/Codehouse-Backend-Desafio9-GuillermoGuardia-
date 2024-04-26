@@ -1,22 +1,48 @@
   
-         <div class="shadow-lg text-black bg-lime-300 px-4 flex items-center justify-between flex-wrap space-x-5">
+         <div class="text-sm shadow-lg text-black bg-lime-300 px-4 py-2 flex items-center justify-between flex-wrap space-x-5">
          
                 <div class="px-4 flex items-center justify-between flex-wrap space-x-5">
                     <div>
-                        <a href="/" class="inline-block text-sm px-4 py-2 leading-none  hover:border-transparent hover:text-teal-500">Home</a>
+                        <a href="/" class="font-medium inline-block  px-4 py-2 leading-none  hover:border-transparent hover:text-teal-500">Lista de Productos</a>
                     </div>
+                    {{#if sessionData.login}}
+                    <!-- De no haber user logueado pngo en la barra form para ingresar mail y llamar a la vista chat....pero si el middleware corroborara el mail
+                      y si se trata de un admin no lo dejara pasar -->
+                    
                      <div>
-                        <a href="#" class="inline-block text-sm px-4 py-2 leading-none  hover:border-transparent hover:text-teal-500">Categorias</a>
+                        <a href='/views/chat?email={{sessionData.user.email}}' class="font-medium  inline-block  px-4 py-2 leading-none  hover:border-transparent hover:text-teal-500">Chat</a>
                     </div>
-                     <div>
-                        <a href="#" class="inline-block text-sm px-4 py-2 leading-none  hover:border-transparent hover:text-teal-500">Ofertas</a>
-                    </div>
+
+                    
+                    {{else}}
                     <div>
-                        <a href="#" class="inline-block text-sm px-4 py-2 leading-none  hover:border-transparent hover:text-teal-500">Ayuda</a>
+                        <form action='/views/chat' method='get' class="flex flex-row space-x-3" enctype="application/x-www-form-urlencoded">
+                            <label class="font-medium ">Chatea con nosotros</label>
+                            <input type="email" name="email" placeholder="Ingresa tu email"
+                                   class="text-black border rounded-md px-2 text-sm leading-5 focus:outline-none focus:ring focus:border-blue-300" required>
+                            </div>
+                            <button  type="submit" class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
+                                Ingresar
+                            </button>
+                        </form>
                     </div>
+                     <div>
+                        <form action='/views/realtimeproducts' method='get' class="flex flex-row space-x-3" enctype="application/x-www-form-urlencoded">
+                            <label class="font-medium ">Ingreso a realTimeProducts</label>
+                            <input type="email" name="email" placeholder="Ingresa tu email"
+                                   class="text-black border rounded-md px-2 text-sm leading-5 focus:outline-none focus:ring focus:border-blue-300" required>
+                            </div>
+                            <button  type="submit" class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
+                                Ingresar
+                            </button>
+                        </form>
+                    </div>
+                    {{/if}}
+
+                    
                     {{#if sessionData.admin}}
                      <div>
-                        <a href="/realtimeproducts" class="inline-block text-sm px-4 py-2 leading-none  hover:border-transparent hover:text-teal-500">realTimeProducts</a>
+                        <a href="/views/realtimeproducts?email={{sessionData.user.email}}" class="font-medium inline-block text-sm px-4 py-2 leading-none  hover:border-transparent hover:text-teal-500">realTimeProducts</a>
                     </div>
                     {{/if}}
                

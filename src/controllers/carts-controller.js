@@ -1,5 +1,7 @@
 import { CartRepository } from "../repositories/cart.repositories.js"
+import { ProductRepository } from "../repositories/products.repositories.js"
 const cartRepository = new CartRepository()
+const productRepository = new ProductRepository()
 
 export class CartsController{
     async getCartById(req,res){
@@ -32,11 +34,12 @@ export class CartsController{
         const {quantity} = req.body    //console.log(req.body)
         try {
             const cart = await cartRepository.addProductInCart(cartId,productId,quantity)
-            console.log('Desde repository: ',cart)
+            //console.log('Desde repository: ',cart)
             if(!cart){
                 console.log(`No existe carrito id${cid}`)
                 res.send(`No existe carrito id${cid}`)
             }
+            //En este caso ademas de devolver el cart enviare ya la info de cantidad de productos.
            res.json(cart)
         } catch (error) {
             res.status(500).send(`Error al agregar productos al carrito.`)
@@ -92,9 +95,53 @@ export class CartsController{
     async cartCheckout(req,res){
         const {cid:cartId} = req.params
         try{
+            const listToTicket = [] //LO que ira al ticket,
+            const listNoTicket = [] //Lo que no ira al ticket...
+           // console.log(await productRepository.getProductStockById('6627bee234fb32d5a0bc2d3b'))
             //Voy a buscar el carrito con el servicio de carritos
-            const cart = cartRepository.getCartById(cartId)
+            const cart = await cartRepository.getCartById(cartId)
             console.log('Productos en el carro: ',cart)
+            //Recorro cart.products y consulto stock y divido caminos.
+           for(let item in cart.products){
+                const productId = cart.products[item].product.toString()
+                const requiredQuantity = cart.products[item].quantity
+                console.log('Products Id en este cart: ',productId, ' Quantity: ', requiredQuantity)
+                //corroboro stock del producto.
+                const product = await productRepository.getProductById(productId)
+
+                if (requiredQuantity <= product.stock){
+                    console.log('Restamos stock...')
+                    //Resto del stock
+                    await productRepository.updateProductStock(productId,product.stock - requiredQuantity)
+                    //Agrego al proceso de compra
+                    listToTicket.push({
+                        productId: product.id,
+                        productTitle: product.title,
+                        img: product.img,
+                        unitPrice: product.price,
+                        totalPrice: product.price * requiredQuantity,
+                        })
+                    //agrego data para generar el ticket
+                    //borro del carro del usuario
+                    await productRepository.deleteProduct(productId)
+                }
+                else{
+                    console.log('No agregamos a la compra, no restamos del stock...')
+                    //Junto en el array la lista de productos que no hay stock
+                    listNoTicket.push({
+                        productId: product.id,
+                        productTitle: product.title,
+                    })
+                }
+                //console.log('Stock Producto: ', product.stock)
+
+                              
+                
+            }
+            
+          
+
+            res.json({purchasedProducts: listToTicket, noPurchased: listNoTicket })
         }catch(error){
             throw new Error('Error al intentar checkout...')
         }

@@ -60,5 +60,23 @@ export class UsersRepository{
             throw new Error(`Error al intentar comprobar existencia de usuario...`)
         }
     }
+
+    async getMailRole(email){
+        
+    //Revisara si existe un user con ese email y devolvera el role (user o admin)
+    //de no estar registrado devuelve null
+        try {
+            const searchedUser = await this.getUser(email)
+            if (searchedUser) {
+                console.log(`Existe user con email ${email}`)
+                return searchedUser.role            }
+            else {
+                console.log(`No existe user con email ${email}`)
+                return null
+            }
+        } catch (error) {
+            throw new Error(`Error al intentar comprobar existencia de usuario...`)
+        }
+    }
     
 }
