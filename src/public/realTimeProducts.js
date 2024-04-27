@@ -82,18 +82,89 @@ async function addProduct(){
 socket.on('eventProducts',(data)=>{
     alert('escucuche eventProducts')
     console.log('Data eventProducts: ', data)
-    //Agregamos los elementos al dom en nuestra div grid donde van los productos y tiene id='containerproducts'
-    //Pero antes limpiamos el container xq como esto escucha constantemente va a agregar cada vez que escuche.
-    const containerProducts = document.getElementById('containerproducts')
-    //Con esto limpio
-    if (containerProducts) {// Elimina todos los nodos hijos
-        while (containerProducts.firstChild) {
-          containerProducts.removeChild(containerProducts.firstChild);
-        }
-      } else console.error('El elemento con el ID especificado no existe.');
-    //Recorro el array y x cada elemento agrego el product Al container
-    data.forEach(item =>addProductCartToContainer(containerProducts, item.title, item.price, item._id,item.img))
- })
+    construirTabla(data)
+ 
+ 
+  })
+
+
+ function construirTabla(productsList){
+  const rowsContainer = document.getElementById('rows-table-allproducts')
+
+  //Por cada elemento en data voy a construir una columna con esos datos
+
+
+  productsList.forEach( item => {
+
+      //Contruyo el contenedor fila
+    const newRowContainer = document.createElement('tr')
+    newRowContainer.className = "bg-white dark:bg-gray-800"
+    //construyo las celdas
+    const cellProductId = document.createElement('th')
+    cellProductId.setAttribute("scope", "col");
+    //cellProductId.className = "px-6 py-4"
+    cellProductId.innerText = item._id
+
+    const cellProductTitle = document.createElement('th')
+    cellProductTitle.setAttribute("scope", "col");
+    cellProductTitle.className = "px-2 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+    cellProductTitle.innerText = item.title
+
+    
+    const cellProductStock = document.createElement('th')
+    cellProductStock.setAttribute("scope", "col");
+    //cellProductStock.className = "px-6 py-4"
+    cellProductStock.innerText = item.stock
+
+    const cellProductCategory = document.createElement('th')
+    cellProductCategory.setAttribute("scope", "col");
+    //cellProductCategory.className = "px-6 py-4"
+    cellProductCategory.innerText = item.category
+
+    const cellProductPrice = document.createElement('th')
+    cellProductPrice.setAttribute("scope", "col");
+    //cellProductPrice.className = "px-6 py-4"
+    cellProductPrice.innerText =  item.price
+
+    const cellProductStatus = document.createElement('th')
+    cellProductStatus.setAttribute("scope", "col");
+    //De acuerdo al estado renderizo un ancor u otro para llamar a la solicitud http que llamara al server socket
+    const linkButton = document.createElement('a')
+    
+    if (item.status == true){
+      linkButton.href = `/api/products/${item._id}/changestatus`
+      linkButton.innerText = 'Inactivar producto'
+      linkButton.className = "inline-block bg-green-500 hover:bg-blue-700 text-white py-1 px-2 rounded"
+    }else{
+      linkButton.href = `/api/products/${item._id}/changestatus`
+      linkButton.innerText = 'Activar producto'
+      linkButton.className = "inline-block bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded"
+    }
+    cellProductStatus.appendChild(linkButton)
+    
+
+    //Los agrego a la tabla
+    newRowContainer.appendChild(cellProductId)
+    newRowContainer.appendChild(cellProductTitle)
+    newRowContainer.appendChild(cellProductStock)
+    newRowContainer.appendChild(cellProductCategory)
+    newRowContainer.appendChild(cellProductPrice)
+    newRowContainer.appendChild(cellProductStatus)
+    
+    rowsContainer.appendChild(newRowContainer)
+
+    //Devuelvo las 
+    //return newRowContainer
+   
+  })
+  
+ 
+
+  //con los items construyo los th
+
+
+
+ }
 
  //Cuando escucha el mensaje del resultado de agregar da un alert
  socket.on('resultAddMessage',(data)=>alert(data))

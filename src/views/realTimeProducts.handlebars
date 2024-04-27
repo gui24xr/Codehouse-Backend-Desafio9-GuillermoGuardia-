@@ -43,13 +43,82 @@
   
       
       <!--CONTAINER CATALOGO-->
-      <div class="w-5/6 px-10 py-10">
+      <div class="w-5/6 px-10 py-4">
              <div id="containerproducts" class="grid grid-cols-6 gap-4" >
                <!--Aca la productList viene a travez de manipulacion de DOM.-->
              </div>
+
+             <div class="relative overflow-x-auto space-y-10">
+                <!--TABLA CAMBIOS -->
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <caption class="text-xl text-white py-2 font-bold bg-purple-700 uppercase text-gray-700 dark:text-gray-300">
+                        Recientemente agregados
+                    </caption>
+                    <thead class="text-xs text-white uppercase bg-slate-700 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-2 py-3">
+                            ID
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Producto
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Stock
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Category
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Precio
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="rows-table" class="px-6 py-4 font-small whitespace-nowrap dark:text-white">
+                        
+                    <!--ACA ENTRAN LAS FILAS VIENEN POR MANIPULACION DOM -->
+                    </tbody>
+                </table>
+
+                <!--TABLA TODOS LOS PRODUCTOS -->
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <caption class="text-xl text-white py-2 font-bold bg-purple-700 uppercase text-gray-700 dark:text-gray-300">
+                        STOCK
+                    </caption>
+                    <thead class="text-xs text-white uppercase bg-slate-700 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-2 py-3">
+                            ID
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Producto
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Stock
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Category
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Precio
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="rows-table-allproducts" class="px-6 py-4 font-small whitespace-nowrap dark:text-white">
+                        
+                    <!--ACA ENTRAN LAS FILAS VIENEN POR MANIPULACION DOM -->
+                    </tbody>
+                </table>
+            </div>
+             
       </div>
 
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
-<script src="realTimeProducts.js"></script>
+<script src="/realTimeProducts.js"></script>

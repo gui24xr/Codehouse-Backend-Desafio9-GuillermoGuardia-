@@ -17,7 +17,7 @@ import {router as routerProducts} from './routes/products.router.js'
 import {router as routerSessions} from './routes/sessions.router.js'
 
 import { addSessionData } from "./middlewares/middlewares.js";
-
+import { SocketManager } from "./socket/socketmanager.js";
 
 //PRUEBA SQLITE3
 //import { connectToSqlite3 } from "./config/sqliteconnect.js";
@@ -77,8 +77,8 @@ const httpServer = app.listen(PUERTO,()=>{
 })
 
 //Configuracion e inicio de websockets.
-initSocket(httpServer)
-
+//initSocket(httpServer)
+new SocketManager(httpServer);
 
 //Conexion por sockets.
 //export const io = new Server(httpServer)

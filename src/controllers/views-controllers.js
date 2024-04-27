@@ -226,7 +226,10 @@ async viewProductsListPaginate(req,res){
 
 
     viewChat(req,res){
-        res.render('chat/chat')
+        //SI estamos sin token pedira el email para corroborar que no sea admin ya que los mismos no puden ingresar al chat
+        const {email} = req.query
+        //Le mandamos el mail/nombre de usuario
+        res.render('chat/chat',{activeUser:email})
    }
 
    async viewProfile(req,res){
