@@ -4,6 +4,8 @@ import { mySocketServer } from "../app.js";
 const productRepository = new ProductRepository()
 
 export class ProductController{
+
+    //Devuelve todos los productos
     async getProducts(req,res){
         const limit = req.query.limit
         try{
@@ -15,6 +17,21 @@ export class ProductController{
             res.status(500).send(`Error al obtener productos...`)
         }
     }
+
+   
+    //Devuelve los productos paginados pero devuelve solo los que tienen status true.
+async getProductsListPaginate(req,res){
+    const {limit,page,sort,query} = req.query     
+    try{
+         const sortValue = sort == '1' ? 1 : sort == '-1' ? -1 : 0   //console.log('SortValue', sortValue)
+        const paginate = await productRepository.getProductsPaginate(limit ? limit : 10,page ? page : 1,sortValue,query)
+        res.json(paginate)
+
+    }catch(error){
+         res.status(500).json({error: 'Error del servidor'})
+        throw new Error('Error al intentar obtener productos con paginacion...')
+    }
+}
 
     async getProductById(req,res){
         const {pid:productId} = req.params
@@ -125,17 +142,5 @@ async changeProductStatus(req,res){
     }
 }
 
-       
-async getProductsListPaginate(req,res){
-    const {limit,page,sort,query} = req.query     
-    try{
-         const sortValue = sort == '1' ? 1 : sort == '-1' ? -1 : 0   //console.log('SortValue', sortValue)
-        const paginate = await productRepository.getProductsPaginate(limit ? limit : 10,page ? page : 1,sortValue,query)
-        res.json(paginate)
 
-    }catch(error){
-         res.status(500).json({error: 'Error del servidor'})
-        throw new Error('Error al intentar obtener productos con paginacion...')
-    }
-}
 }

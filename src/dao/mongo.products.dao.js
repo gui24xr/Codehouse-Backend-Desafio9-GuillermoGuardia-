@@ -25,6 +25,8 @@ export class MongoProductsDAO{
    }
 
    //Solamente modifica el stock...
+   //SI el stock pasar a ser cero al ser modificado entonces el status pasara a inactivo/false.
+   //Stock en cero producto inactivo, stock distinto de cero el producto puede, o no ,estar activo.
    async updateProductStock(productId,newStockQuantity){
     
     try {
@@ -32,13 +34,16 @@ export class MongoProductsDAO{
             productId,
             { $set: { stock: newStockQuantity } }, 
             { new: true }
-        );
+        )
         if (!updatedProduct) {
             console.log('Producto no encontrado...');
             return {isSuccess: false,
                     message: `No existe producto con id${productId}.`
                 }
         }
+        //Aca modificamos el state una vez modificado el stock.
+        if (updatedProduct.stock < 1 ) updatedProduct.status = false
+        //Retornadmos
         return {
             isSuccess: true,
             message: `Se edito el producto con id${productId}.`,
@@ -92,7 +97,7 @@ export class MongoProductsDAO{
     try {
       //sort puede ser 1,-1 o undefined
       const sortBy = sort == 1 ? {price:1} : sort == -1 ? {price:-1} : {}
-      const filterBy = query ? query : {} //Provisorio hasta que se implemente el filtro visual
+      const filterBy = query ? query : {status : true} //Provisorio hasta que se implemente el filtro visual
       const products = await ProductModel.paginate(filterBy,{limit:limit,page:page, sort:sortBy})
       return products
 
