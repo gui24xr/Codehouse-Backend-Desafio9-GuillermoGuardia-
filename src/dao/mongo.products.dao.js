@@ -1,3 +1,4 @@
+import { configSessionFileStorage } from "../config/sessions-config.js"
 import { ProductModel } from "../models/product.model.js"
 
 
@@ -25,6 +26,7 @@ export class MongoProductsDAO{
 
    //Solamente modifica el stock...
    async updateProductStock(productId,newStockQuantity){
+    
     try {
         const updatedProduct = await ProductModel.findByIdAndUpdate(
             productId,
@@ -104,6 +106,7 @@ export class MongoProductsDAO{
     //{success: true/false, message: '',product: producto Agregado}
     //Si producto no fue agregado devuelve null
     async addProduct({title, description,price,img,code,category,stock,status,thumbnails}){
+        //console.log('En DAO: ', title, description,price,img,code,category,stock,status,thumbnails)
         try{
             //Comprobamos que vengan todos los campos en los parametros
             if (!title || !description || !price|| !img || !code ||  !category || !stock || !status|| !thumbnails){
@@ -111,9 +114,9 @@ export class MongoProductsDAO{
                 return {success: false, message: 'Es necesario ingresar todos los campos...',product: null}
             }
             //Busco que el producto no exista.
-            console.log('Existe code: ', code)
+            //console.log('Existe code: ', code)
             const existProduct = await ProductModel.findOne({code:code})
-            console.log('Existe: ', existProduct)
+            //console.log('Existe: ', existProduct)
             if (existProduct){
                 //Si el codigo existe no agrego entonces salgo de la funcion enviando un mensaje a quien invoco
                 console.log('Existe un producto con este codigo...')
@@ -136,7 +139,29 @@ export class MongoProductsDAO{
             res.status(500)
         }
     }
-
+    
+    async changeProductStatus(productId){
+        try{
+            const searchedProduct = await ProductModel.findById(productId)
+            if (!searchedProduct) {
+                console.log('Producto no encontrado...');
+                return {success: false,
+                        message: `No existe producto con id${productId}.`
+                        }
+            }
+            if ( searchedProduct.status == true ) searchedProduct.status = false
+            else searchedProduct.status = true
+            //searchedProduct.marks('products')
+            searchedProduct.save()
+            return {
+                success: true,
+                message: `Se cambio el estado del producto con id${productId}.`,
+                searchedProduct
+            }
+        }catch(error){
+            throw new Error(`Error al intentar cambiar estado a producto ${productId} desde mongoDao...`)
+        }
+    }
 
 
 

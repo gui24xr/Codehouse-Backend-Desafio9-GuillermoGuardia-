@@ -5,7 +5,6 @@ import passport from 'passport'
 
 import cors from 'cors'
 import { configHandlebars } from "./config/handlebars-config.js"
-import { initSocket } from "./socket-config.js"
 import { initDataBaseConnection } from "./config/database.js";
 import { configSessionMongo } from "./config/sessions-config.js";
 import { initializePassport } from "./config/passport.config.js";
@@ -15,6 +14,7 @@ import {router as routerViews} from './routes/views.router.js'
 import {router as routerCarts } from './routes/carts.router.js'
 import {router as routerProducts} from './routes/products.router.js'
 import {router as routerSessions} from './routes/sessions.router.js'
+import {router as routerPruebas} from './routes/pruebas.router.js' //Interno para pruebas
 
 import { addSessionData } from "./middlewares/middlewares.js";
 import { SocketManager } from "./socket/socketmanager.js";
@@ -65,6 +65,7 @@ app.use('/',routerViews)
 app.use('/',routerCarts) 
 app.use('/',routerProducts)
 app.use('/',routerSessions)
+app.use('/pruebas', routerPruebas)
 
  ////////////////////////////////////////////////////////
 
@@ -78,7 +79,8 @@ const httpServer = app.listen(PUERTO,()=>{
 
 //Configuracion e inicio de websockets.
 //initSocket(httpServer)
-new SocketManager(httpServer);
+export const mySocketServer = new SocketManager(httpServer);
+mySocketServer.initSocketEvents()
 
 //Conexion por sockets.
 //export const io = new Server(httpServer)

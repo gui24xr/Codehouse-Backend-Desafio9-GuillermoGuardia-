@@ -66,6 +66,8 @@ export class ProductRepository{
 
 
     async addProduct({title, description,price,img,code,category,stock,status,thumbnails}){
+        
+        //console.log('En repository: ',title, description,price,img,code,category,stock,status,thumbnails)
         try{
            const addResult = await mongoProductsDAO.addProduct({title, description,price,img,code,category,stock,status,thumbnails})
            return addResult
@@ -73,6 +75,18 @@ export class ProductRepository{
             res.status(500)
         }
     }
+
+    async changeProductStatus(productId){
+        try{ 
+            const updateStateResult = await mongoProductsDAO.changeProductStatus(productId)
+            return updateStateResult   
+        }catch(error){
+            throw new Error(`Error al intentar cambiar estado a producto ${productId} desde productRepository...`)
+        }
+    }
+
+
+
 
 
 

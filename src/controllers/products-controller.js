@@ -1,4 +1,5 @@
 import { ProductRepository } from "../repositories/products.repositories.js";
+import { mySocketServer } from "../app.js";
 
 const productRepository = new ProductRepository()
 
@@ -70,6 +71,59 @@ export class ProductController{
             res.status(500).send(`Error al intentar agregar producto...`)
         }
     }
+
+    async addProductFromRealTimeProductsView(req,res){
+        //const productToAdd = req.body
+        console.log('prrr: ', req.body)
+        const {title,description,code,price,stock,category,status,img} = req.body
+        try{
+           const addProductResult = await productRepository.addProduct({
+                title:title,
+                description:description,
+                price:price,
+                img:img,
+                code:code,
+                category:category,
+                stock:stock,
+                status:status,
+                thumbnails:'tt'})
+
+        console.log(addProductResult)
+        //Si todo salio OK hacemos el socket.emit, de lo contrario errorpage y mensaje.
+        if (addProductResult.success){
+            //console.log('socketEMit')
+            mySocketServer.emitAddProduct()
+            res.status(204).end();
+        }
+        else{
+            res.render('messagepage',{message: addProductResult.message})
+        }
+
+        }catch(error){
+            throw new Error(`Error al intentar agregar producto from realTimeView...`)
+        }
+     
+    }
+
+async changeProductStatus(req,res){
+    //Se encarga de cambiar de activo/inactivo el estado del producto para que aparezca o no en la tienda.
+    const {id:productId} = req.params
+    console.log(`Cambiar estado a productID ${productId}`)
+    try{
+        const changeStatusResult = await productRepository.changeProductStatus(productId)
+        if(changeStatusResult.success){
+            //console.log('socketEMit')
+            mySocketServer.emitAddProduct()
+            res.status(204).end();
+        }
+        else{
+            res.render('messagepage',{message: changeStatusResult.message})
+        }
+        
+    }catch(error){
+        throw new Error(`Error al intentar cambiar estado del producto id${productId}`)
+    }
+}
 
        
 async getProductsListPaginate(req,res){

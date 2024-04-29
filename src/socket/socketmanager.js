@@ -12,7 +12,7 @@ export class SocketManager{
 
     constructor(httpServer){
         this.io = new Server(httpServer)
-        this.initSocketEvents()
+        //this.initSocketEvents()
     }
 
     initSocketEvents(){
@@ -23,7 +23,7 @@ export class SocketManager{
             //Cuando el cliente envie el mensaje escucha y lo guarda a la BD
             socket.on('eventAddMessage',async(receivedData)=>{
                 //Toma lo recibido para guardarlo en La BD
-                console.log(receivedData)
+                //console.log(receivedData)
                 const  {user,message} = receivedData 
                 await messagesRepository.saveMessages(user,message)
 
@@ -41,5 +41,9 @@ export class SocketManager{
         
 
         })
+    }
+
+    async emitAddProduct(){
+        this.io.emit('eventProducts',await productRepository.getProducts())
     }
 }
