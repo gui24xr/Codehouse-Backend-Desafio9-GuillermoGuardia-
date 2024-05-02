@@ -2,13 +2,28 @@ import { TicketModel } from "../models/ticket.model.js";
 
 export class TicketsRepositories{
 
-    async getTickets(){
+    //Si no hay consulta devuelve todos los tickets.
+    async getTickets(filter){
         try {
-            return 1
+            const ticketsList = await TicketModel.find(filter) 
+            if (!ticketsList) return {success: true, message: 'No existen tickets para esta busqueda'}
+            else return {success: true, message: 'Tickets obtenidos correctamente...', tickets:ticketsList}
         } catch (error) {
             throw new Error('Error al intentar obtener tickets desde ticketRepositories...')
         }
     }
+
+    async getTicketsByPurchaser(purchaserId){
+        try {
+            const ticketsList = await TicketModel.find({purchaser:purchaserId}) 
+            if (!ticketsList) return {success: false, message: `No existen tickets para purchaser ${purchaserId}`}
+            else return {success: true, message: `Tickets para purchaser ${purchaserId} obtenidos correctamente...`, tickets:ticketsList}
+        } catch (error) {
+            throw new Error('Error al intentar obtener tickets desde ticketRepositories...')
+        }
+    }
+
+
 
     async createTicket(purchaserId,detailsList){
         try {

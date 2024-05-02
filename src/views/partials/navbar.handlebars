@@ -8,13 +8,16 @@
                     {{#if sessionData.login}}
                     <!-- De no haber user logueado pngo en la barra form para ingresar mail y llamar a la vista chat....pero si el middleware corroborara el mail
                       y si se trata de un admin no lo dejara pasar -->
-                    
+                    <div>
+                        <a href="/views/tickets/{{sessionData.user._id}}" class="font-medium inline-block  px-4 py-2 leading-none  hover:border-transparent hover:text-teal-500">Mis Compras</a>
+                    </div>
                      <div>
                         <a href='/views/chat?email={{sessionData.user.email}}' class="font-medium  inline-block  px-4 py-2 leading-none  hover:border-transparent hover:text-teal-500">Chat</a>
                     </div>
 
                     
                     {{else}}
+              
                     <div>
                         <form action='/views/chat' method='get' class="flex flex-row space-x-3" enctype="application/x-www-form-urlencoded">
                             <label class="font-medium ">Chatea con nosotros</label>

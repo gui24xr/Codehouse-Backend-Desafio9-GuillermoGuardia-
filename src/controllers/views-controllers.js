@@ -1,6 +1,7 @@
 import { ProductRepository } from "../repositories/products.repositories.js"
 import { CartRepository } from "../repositories/cart.repositories.js"
 import { UsersRepository } from "../repositories/users.repositories.js"
+import { TicketsRepositories } from "../repositories/ticket.repositories.js"
 import { generateJWT } from "../utils/jwt.js"
 import { createHash } from "../utils/hashbcryp.js"
 import { CheckoutService } from "../services/checkout-service.js"
@@ -10,6 +11,7 @@ const productsRepository = new ProductRepository()
 const usersRepository = new UsersRepository()
 const cartsRepository = new CartRepository()
 const checkoutService = new CheckoutService()
+const ticketRepositories = new TicketsRepositories()
 
 export class ViewsController{
 
@@ -292,7 +294,39 @@ async viewPurchase(req,res){
     
 }
 
-   
+
+
+ async viewTickets(req,res){
+    const {uid:userId} = req.params
+    try{
+        //const searchResult = await ticketRepositories.getTickets({purchaser:'663120ceda09d7ad646a4000'})
+        const result = await ticketRepositories.getTicketsByPurchaser(userId)
+         //Obtengo un array tengo que procesarlo.
+        const ticketsFromPurchaser = []
+        if (result.success){//console.log('Detalle ticket: ', checkoutResult.ticket.details)
+            
+            result.tickets.forEach (item =>{
+                const moment = transformDate(item.purchase_datetime)
+                ticketsFromPurchaser.push({
+                    detailsList: item.details,
+                    price: (item.price).toFixed(1),
+                    transactionDate: moment.date,
+                    transactionHour: moment.hour,
+                    ticketCode: item.code,
+                })
+           })
+           ticketsFromPurchaser.reverse()
+        res.status(200).render('tickets',{ticketsList:ticketsFromPurchaser})
+           
+        }
+        else{
+            res.status(500).render('messagepage',{message: result.message})
+        }
+    
+    }catch(error){
+        throw new Error('Error en prueba gettickets...')
+    }
+}
 
 
 }

@@ -1,0 +1,48 @@
+
+
+<!--CONTAINER PAGE -->
+<div class="w-full">
+     
+    <div class="w-full flex items-center pl-10 bg-blue-600 text-white object-fill py-4">
+      <p class="text-2xl leading-none">/compras realizadas...</p>
+    </div>
+   
+    <div class="py-10 grid grid-cols-4 gap-4">
+    {{#each ticketsList}}   
+    <ul class="scale-90 max-w-md divide-y divide-gray-200 dark:divide-gray-700">
+        <li class="pb-3 sm:pb-4">
+            <div class="w-full max-w-l p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-baseline text-gray-900 dark:text-white">
+                    <span class="text-3xl font-semibold">$</span>
+                    <span class="text-5xl font-extrabold tracking-tight">{{price}}</span>
+                </div>
+                
+                <ul role="list" class="space-y-2">
+                    <li class="flex flex-col my-4">
+                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">Fecha Transaccion: {{transactionDate}}</span>
+                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">Fecha Transaccion: {{transactionHour}}</span>
+                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">Codigo ticket: {{ticketCode}}</span>
+                    </li>
+                    <p class="mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">Detalle</p>
+                    {{#each detailsList}}
+                     <li class="pb-3 sm:pb-4">
+                        <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                            <div class="flex-shrink-0">
+                                <img class="w-8 h-8 rounded-full" src={{this.img}} alt="Neil image">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate dark:text-white">{{this.productTitle}}</p>
+                                <p class="text-sm text-gray-500 truncate dark:text-gray-400">Precio unitario: {{this.unitPrice}}</p>
+                            </div>
+                            <div class="font-semibold text-gray-900 dark:text-white">
+                                <span class="text-sm text-gray-500 truncate dark:text-gray-400">${{this.unitPrice}} x {{ this.requiredQuantity }} = </span> ${{this.subTotalPrice}}
+                            </div>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </li>
+  </ul> 
+  {{/each}} 
+</div>

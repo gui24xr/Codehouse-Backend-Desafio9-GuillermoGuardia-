@@ -21,6 +21,7 @@ router.get('/views/logout', viewsController.viewLogout)
 router.get('/views/profile', viewsController.viewProfile)
 router.get('/views/carts/:cid', viewsController.viewCart)
 router.get('/views/:cid/purchase', viewsController.viewPurchase)
+router.get('/views/tickets/:uid', viewsController.viewTickets)
 
 
 

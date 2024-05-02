@@ -4,12 +4,14 @@ import { MongoProductsDAO } from '../dao/mongo.products.dao.js'
 import { CartRepository } from '../repositories/cart.repositories.js'
 import { CheckoutService } from '../services/checkout-service.js'
 import { UsersRepository } from '../repositories/users.repositories.js'
+import { TicketsRepositories } from '../repositories/ticket.repositories.js'
 
 
 const mongoProductsDAO = new MongoProductsDAO()
 const cartsRepository = new CartRepository()
 const checkoutService = new CheckoutService()
 const userRepositories = new UsersRepository()
+const ticketRepositories = new TicketsRepositories
 
 export const router = express.Router()
 
@@ -81,4 +83,16 @@ router.get('/searchusers',async(req,res)=>{
         throw new Error('Error en prueba searchusers...')
     }
     
+})
+
+router.get('/gettickets',async(req,res)=>{
+
+    try{
+        //const searchResult = await ticketRepositories.getTickets({purchaser:'663120ceda09d7ad646a4000'})
+        const searchResult = await ticketRepositories.getTicketsByPurchaser('663120ceda09d7ad646a4000')
+        //console.log(searchResult)
+        res.json(searchResult)
+    }catch(error){
+        throw new Error('Error en prueba gettickets...')
+    }
 })

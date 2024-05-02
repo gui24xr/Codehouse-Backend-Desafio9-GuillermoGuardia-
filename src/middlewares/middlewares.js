@@ -33,7 +33,7 @@ async function addSessionData(req, res, next) {
         admin: user.user.role == 'admin' ? true : false, //Para saber si se trata de un admin
         productsQuantityInUserCart : await cartsRepository.countProductsInCart(user.user.cart),
       }
-      
+      //console.log('SesionData: ',res.locals.sessionData )
         next();
   })(req, res, next)
 }
