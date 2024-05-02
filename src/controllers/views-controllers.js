@@ -3,10 +3,13 @@ import { CartRepository } from "../repositories/cart.repositories.js"
 import { UsersRepository } from "../repositories/users.repositories.js"
 import { generateJWT } from "../utils/jwt.js"
 import { createHash } from "../utils/hashbcryp.js"
+import { CheckoutService } from "../services/checkout-service.js"
 
+import { transformDate } from "../utils/hour.js"
 const productsRepository = new ProductRepository()
 const usersRepository = new UsersRepository()
 const cartsRepository = new CartRepository()
+const checkoutService = new CheckoutService()
 
 export class ViewsController{
 
@@ -81,7 +84,7 @@ async viewProductsListPaginate(req,res){
         //Por ahora dejo query para que entre por params
         //La idea es cuanto este implementado en el form armar la query para enviar al manager
         const sortValue = sort == '1' ? 1 : sort == '-1' ? -1 : 0   //console.log('SortValue', sortValue)
-        const paginate = await productsRepository.getProductsPaginate(limit ? limit : 10,page ? page : 1,sortValue,query)
+        const paginate = await productsRepository.getProductsPaginate(limit ? limit : 100,page ? page : page,sortValue,query)
         //Hago un mapeo de docs para mandar a rendrizar en handlebars. 
         const mappedProducts = paginate.docs.map(item => ({
             id: item.id, 
@@ -243,38 +246,51 @@ async viewProductsListPaginate(req,res){
 
    
 async viewCart(req,res){
-    const {cid:cartId} = req.params
-    try{
-       const searchedCart = await cartsRepository.getCartById(cartId)
-       console.log('Cart:', searchedCart )
-      // Mapeo para entregar a hbds
-        const productsList = searchedCart.products.map(item => ({
-            id:item.product._id,
-            img:item.product.img,
-            title:item.product.title,
-            price:item.product.price,
-            quantity:item.quantity,
-            totalAmount: Number(item.quantity) * Number(item.product.price)
-        }))
-        console.log('Produclist: ',productsList)
-  
-    
-        res.render('cart')
-        //res.send('carfsfs')
-        //res.json(searchedCart)
-       
-    
-    }
-
-    catch(error){
-        throw new Error('Error al intentar renderizar vista cart...')
-        
-    }
-    
+        const {cid:cartId} = req.params //console.log(req.params)
+        try{
+           const searchedCart = await cartsRepository.getCartById(cartId) //console.log('Cart:', searchedCart )
+          
+          // Mapeo para entregar a hbds
+            const productsInCart = searchedCart.products.map(item => ({
+                id:item.product._id,
+                img:item.product.img,
+                title:item.product.title,
+                price:item.product.price,
+                quantity:item.quantity,
+                totalAmount: (Number(item.quantity) * Number(item.product.price)).toFixed(2)
+            }))//console.log('Produclist: ',productsList)
+            res.render('cart',{cartId:cartId,productsList:productsInCart,cartAmount: searchedCart.cartAmount})
+        }
+         catch(error){
+            throw new Error('Error al intentar renderizar vista cart desde funcion viewcart...')   
+        }
 }
  
 
+async viewPurchase(req,res){
+    const {cid:cartId} = req.params
+    try{
+        const checkoutResult = await checkoutService.checkOutCart(cartId)
+        //Tomo todo de checkout result para renderizar.
+        if (checkoutResult.success){//console.log('Detalle ticket: ', checkoutResult.ticket.details)
+            const moment = transformDate(checkoutResult.ticket.purchase_datetime)
+            res.status(200).render('checkoutresult',{
+                detailsList: checkoutResult.ticket.details,
+                price: (checkoutResult.ticket.price).toFixed(1),
+                transactionDate: moment.date,
+                transactionHour: moment.hour,
+                ticketCode: checkoutResult.ticket.code,
+            })
+        }
+        else{
+            res.status(500).render('messagepage',{message: checkoutResult.message})
+        }
     
+    }catch(error){
+        throw new Error('Error al intentar renderizar purchaseview...')
+    }
+    
+}
 
    
 

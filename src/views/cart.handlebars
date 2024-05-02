@@ -7,18 +7,14 @@
       <p class="text-2xl leading-none">/carrito de compras</p>
     </div>
 
-    <!--TITULO -->
-    <div class="w-full flex items-center pl-10 bg-white text-white py-10">
-      <p class="text-black text-2xl leading-none">PRODUCTOS EN CARRITO ID:{{cartId}}</p>
-    </div>
-
-    <!--CONTAINER TABLA PRODUCTOS EN CARRITO -->
+        <!--CONTAINER TABLA PRODUCTOS EN CARRITO -->
    
-   <div class="flex flex-col px-10 my-4 relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-1/2 mx-auto text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
-        <!-- Ajusté el ancho de la tabla a w-1/2 (la mitad de la pantalla) y la centré con mx-auto -->
+   <div class="flex flex-col px-10 pt-4 relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div>
+            <table class="w-1/2 mx-auto text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
+                <!-- Ajusté el ancho de la tabla a w-1/2 (la mitad de la pantalla) y la centré con mx-auto -->
 
-        <thead class="text-xs text-white uppercase bg-blue-600 border-b border-blue-400 dark:text-white">
+            <thead class="text-xs text-white uppercase bg-blue-600 border-b border-blue-400 dark:text-white">
             <tr>
                 <!--
                 <th scope="col" class="px-4 py-1 bg-blue-500">
@@ -41,8 +37,8 @@
                     subTotal
                 </th>
             </tr>
-        </thead>
-        <tbody>
+         </thead>
+            <tbody>
             {{#each productsList}}
             <tr class="bg-white text-blue-500">
                 <!--
@@ -70,32 +66,26 @@
                 </td>
             </tr>
             {{/each}}
-             <tr class="bg-white text-blue-500">
-                <th class="px-4 py-1">
-                    
-                </th>
-                <td class="px-4 py-1">
-                  
-                </td>
-                <td class="px-4 py-1">
-                   
-                </td>
-                <td class="px-4 py-1">
-                   
-                </td>
-                <td class="py-3 font-semibold text-gray-900 dark:text-white">
-                    TOTAL PRECIO CARRITO
-                </td>
-                <td class="py-3 font-semibold text-gray-900 dark:text-white">
-                   ${{cartAmount}}
-                </td>
-            </tr>
+           
         </tbody>
     </table>
+   </div>
    
-</div>
+    </div>
 
+  <!-- Total del carrito -->
+        <div class="flex justify-center mt-4">
+            <div class="font-semibold text-gray-900 dark:text-white">
+                TOTAL PRECIO CARRITO: ${{cartAmount}}
+            </div>
+        </div>
 
+        <!-- Botón Checkout -->
+        <div class="flex justify-center mt-4">
+            <a href="/views/{{cartId}}/purchase" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+                Confirmar compra
+            </a>
+        </div>
 
 
         

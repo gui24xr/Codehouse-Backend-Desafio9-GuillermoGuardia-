@@ -24,11 +24,10 @@ export class CartRepository {
     }
 
     cartAmount(cart){
-        //Devuelve el total de productos
-        let productsQuantity = 0
-        cart.products.forEach( item => productsQuantity = productsQuantity + item.quantity)
-        return productsQuantity
-        
+        //Devuelve el total de productos en el carrito.
+        let amount = 0
+        cart.products.forEach( item => amount = amount + ( item.product.price * item.quantity))
+        return amount.toFixed(2)
     }
 
 
@@ -40,6 +39,8 @@ export class CartRepository {
                 console.log(`No existe carrito id${cartId}`)
                 return null
             }
+
+
             return {...searchedCart._doc,
                     countProducts:this.countProducts(searchedCart),
                     cartAmount:this.cartAmount(searchedCart)
@@ -51,7 +52,7 @@ export class CartRepository {
 
     async getProductsInCart(cartId){
         try {
-            const searchedCart = await CartModel.findById(cartId)
+            const searchedCart = await CartModel.findById(cartId).populate('products.product')
             if(!searchedCart) {
                 console.log(`No existe carrito id${cartId}`)
                 return null
@@ -104,8 +105,9 @@ export class CartRepository {
                 return {isSuccess:false,message: `No existe carrito id${cartId}`}
             }
             const existProductInCart = searchedCart.products.some(item => item.product.toString() == productId )
+            //console.log('ExisteProductInCart??: ', existProductInCart,'gfg ',productId)
             if (existProductInCart){
-                console.log('El producto esta en el carro, procedemos a eliminarlo...')
+                //console.log('El producto esta en el carro, procedemos a eliminarlo...')
                 const position = searchedCart.products.findIndex(item => item.product.toString() == productId )
                 searchedCart.products.splice(position,1)
                 searchedCart.markModified("carts")
@@ -117,7 +119,7 @@ export class CartRepository {
                         countProducts:this.countProducts(searchedCart)}    
                     }
             else{
-               console.log(`El producto ${productId} no esta en el carro,no hay nada para eliminar !`)
+               //console.log(`El producto ${productId} no esta en el carro,no hay nada para eliminar !`)
                return { 
                         isSuccess: false, 
                         message: 'El producto no se encontró en el carrito',

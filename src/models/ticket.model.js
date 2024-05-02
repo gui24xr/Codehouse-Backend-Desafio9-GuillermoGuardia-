@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-
+import shortid from "shortid"
 
 const collectionName = 'tickets'
 
@@ -7,7 +7,8 @@ const ticketSchema = mongoose.Schema({
     code: {
         type: String,
         unique:true,
-        required: true
+        required: true,
+        default: shortid.generate
     },
     purchase_datetime: {
         type: Date,
@@ -22,7 +23,10 @@ const ticketSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
         required: true
-    }
+    }, //Detalles del ticket.
+    details:[{
+    }]
+
 });
 
 export const TicketModel = new mongoose.model(collectionName,ticketSchema)

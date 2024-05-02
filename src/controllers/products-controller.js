@@ -24,7 +24,7 @@ async getProductsListPaginate(req,res){
     const {limit,page,sort,query} = req.query     
     try{
          const sortValue = sort == '1' ? 1 : sort == '-1' ? -1 : 0   //console.log('SortValue', sortValue)
-        const paginate = await productRepository.getProductsPaginate(limit ? limit : 10,page ? page : 1,sortValue,query)
+        const paginate = await productRepository.getProductsPaginate(limit ? limit : 10,page ? page : page,sortValue,query)
         res.json(paginate)
 
     }catch(error){

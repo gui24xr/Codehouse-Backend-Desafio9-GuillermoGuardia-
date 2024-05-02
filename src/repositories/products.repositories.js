@@ -27,6 +27,8 @@ export class ProductRepository{
 
    }
 
+
+
    async updateProductStock(productId,newStockQuantity){
      try{
         await mongoProductsDAO.updateProductStock(productId,newStockQuantity)

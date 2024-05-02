@@ -50,7 +50,7 @@ export class UsersRepository{
         try {
             const searchedUser = await UserModel.findOne({email:email})
             if (searchedUser) {
-                console.log(`Existe user con email ${email}`)
+                //console.log(`Existe user con email ${email}`)
                 return searchedUser            }
             else {
                 console.log(`No existe user con email ${email}`)
@@ -60,6 +60,21 @@ export class UsersRepository{
             throw new Error(`Error al intentar comprobar existencia de usuario...`)
         }
     }
+
+
+    //Esta funcion devolvera los usuarios con coincidencias en esos campos
+    //FilterObject debe ser un objeto que tenga prop campo, valor valor, y puede ser mas de uno...
+    async getUsers(filterObject){
+        //console.log('Filter: ', filterObject)
+        try {
+            const matches = await UserModel.find(filterObject)
+            return matches
+            } catch (error) {
+            throw new Error(`Error al intentar comprobar existencia de usuario...`)
+        }
+        
+    }
+
 
     async getMailRole(email){
         

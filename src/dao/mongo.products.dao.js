@@ -42,7 +42,8 @@ export class MongoProductsDAO{
                 }
         }
         //Aca modificamos el state una vez modificado el stock.
-        if (updatedProduct.stock < 1 ) updatedProduct.status = false
+        if (updatedProduct.stock == 0 ) updatedProduct.status = false
+        updatedProduct.save()
         //Retornadmos
         return {
             isSuccess: true,
